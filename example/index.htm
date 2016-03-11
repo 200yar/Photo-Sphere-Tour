@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="../bower_components/Photo-Sphere-Viewer/dist/photo-sphere-viewer.css">
+  <link rel="stylesheet" href="../dist/photo-sphere-tour.css">
+
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+    }
+    #phototour {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="phototour"></div>
+
+<script src="../bower_components/three.js/three.js"></script>
+<script src="../bower_components/D.js/lib/D.min.js"></script>
+<script src="../bower_components/Photo-Sphere-Viewer/dist/photo-sphere-viewer.js"></script>
+<script src="../dist/photo-sphere-tour.js"></script>
+
+<script>
+  var PST = new PhotoSphereTour({
+    container: 'phototour',
+    nodes: [
+      {
+        id: 'node-1',
+        panorama: '1.jpg',
+        caption: 'Image 1',
+        links: [
+          { target_id: 'node-2', longitude: 0, latitude: 0 },
+          { target_id: 'node-4', longitude: Math.PI/2, latitude: 0 }
+        ]
+      },
+      {
+        id: 'node-2',
+        panorama: '2.jpg',
+        caption: 'Image 2',
+        links: [
+          { target_id: 'node-1', longitude: Math.PI, latitude: 0 },
+          { target_id: 'node-3', longitude: Math.PI/2, latitude: 0 }
+        ]
+      },
+      {
+        id: 'node-3',
+        panorama: '3.jpg',
+        caption: 'Image 3',
+        links: [
+          { target_id: 'node-2', longitude: -Math.PI/2, latitude: 0 },
+          { target_id: 'node-4', longitude: Math.PI, latitude: 0 }
+        ]
+      },
+      {
+        id: 'node-4',
+        panorama: '4.jpg',
+        caption: 'Image 4',
+        links: [
+          { target_id: 'node-1', longitude: -Math.PI/2, latitude: 0 },
+          { target_id: 'node-3', longitude: 0, latitude: 0 }
+        ]
+      }
+    ]
+  });
+</script>
+
+<script>
+  document.write('<script src="//' + location.host.split(':')[0] + ':35729/livereload.js" async defer><' + '/script>');
+</script>
+</body>
+</html>

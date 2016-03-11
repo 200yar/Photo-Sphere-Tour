@@ -1,0 +1,40 @@
+{
+  "name": "Photo-Sphere-Tour",
+  "version": "1.0.0",
+  "authors": [
+    {
+      "name": "Damien \"Mistic\" Sorel",
+      "email": "contact@git.strangeplanet.fr",
+      "homepage": "http://www.strangeplanet.fr"
+    }
+  ],
+  "description": "Virtual tour using Photo Sphere panoramas",
+  "homepage": "https://github.com/mistic100/Photo-Sphere-Tour",
+  "main": [
+    "dist/photo-sphere-tour.js",
+    "dist/photo-sphere-tour.css"
+  ],
+  "dependencies": {
+    "Photo-Sphere-Viewer": "master"
+  },
+  "keywords": [
+    "virtual",
+    "tour",
+    "photosphere",
+    "panorama"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mistic100/Photo-Sphere-Tour.git"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src",
+    "tests",
+    "package.json",
+    "Gruntfile.js"
+  ]
+}

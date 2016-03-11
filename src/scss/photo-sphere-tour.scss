@@ -1,0 +1,16 @@
+.psv-link-marker {
+  svg {
+    transform: rotateX(0deg);
+    transition: transform ease .3s;
+  }
+
+  &:hover svg {
+    transform: rotateX(45deg);
+  }
+
+  svg * {
+    fill: rgba(255, 255, 255, 0.8);
+    stroke: rgba(0, 0, 0, 0.8);
+    stroke-width: 1px;
+  }
+}
