@@ -36,5 +36,8 @@
     "tests",
     "package.json",
     "Gruntfile.js"
-  ]
+  ],
+  "devDependencies": {
+    "threejs-examples": "master"
+  }
 }

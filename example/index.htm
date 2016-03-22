@@ -25,14 +25,31 @@
 
 <div id="phototour"></div>
 
-<script src="../bower_components/three.js/three.js"></script>
+<script src="../bower_components/three.js/three.min.js"></script>
 <script src="../bower_components/D.js/lib/D.min.js"></script>
+<script src="../bower_components/uevent/uevent.min.js"></script>
+<script src="../bower_components/threejs-examples/examples/js/renderers/CanvasRenderer.js"></script>
+<script src="../bower_components/threejs-examples/examples/js/renderers/Projector.js"></script>
+<script src="../bower_components/threejs-examples/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="../bower_components/threejs-examples/examples/js/postprocessing/RenderPass.js"></script>
+<script src="../bower_components/threejs-examples/examples/js/postprocessing/ShaderPass.js"></script>
+<script src="../bower_components/threejs-examples/examples/js/postprocessing/MaskPass.js"></script>
+<script src="../bower_components/threejs-examples/examples/js/shaders/CopyShader.js"></script>
+<script src="../bower_components/threejs-examples/examples/js/controls/DeviceOrientationControls.js"></script>
 <script src="../bower_components/Photo-Sphere-Viewer/dist/photo-sphere-viewer.js"></script>
 <script src="../dist/photo-sphere-tour.js"></script>
 
 <script>
   var PST = new PhotoSphereTour({
     container: 'phototour',
+    viewer_options: {
+      gyroscope: true,
+      transition: {
+        duration: 1000,
+        loader: true,
+        blur: true
+      }
+    },
     nodes: [
       {
         id: 'node-1',
@@ -41,7 +58,15 @@
         links: [
           { target_id: 'node-2', longitude: 0, latitude: 0 },
           { target_id: 'node-4', longitude: Math.PI/2, latitude: 0 }
-        ]
+        ],
+        markers: [{
+          id: 'node-1-marker-1',
+          tooltip: 'Building :-)',
+          polygon_rad: [-0.20, 0.45, 0.005, 0.435, 0, 0.155, -0.23, 0.16],
+          style: {
+            fill: 'rgba(255,255,255, 0.5)'
+          }
+        }]
       },
       {
         id: 'node-2',
@@ -71,6 +96,19 @@
         ]
       }
     ]
+  });
+
+  // Loading of objects of node-2 is deferred
+  PST.on('current-node-changed', function(node) {
+    if (node.id == 'node-2') {
+      var defer = D();
+
+      setTimeout(function() {
+        defer.resolve();
+      }, 2000);
+
+      return defer.promise;
+    }
   });
 </script>
 

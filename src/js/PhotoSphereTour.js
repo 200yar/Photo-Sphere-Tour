@@ -7,22 +7,15 @@ function PhotoSphereTour(options) {
     return new PhotoSphereTour(options);
   }
 
-  this.config = PSVUtils.deepmerge(PhotoSphereTour.DEFAULTS, options);
+  this.config = PSVUtils.clone(PhotoSphereTour.DEFAULTS);
+  PSVUtils.deepmerge(this.config, options);
 
   // check config
   if (!this.config.container) {
     throw new PSTError('No value given for container.');
   }
 
-  if (!this.config.nodes || this.config.nodes.length === 0) {
-    throw new PSTError('No value given for nodes.');
-  }
-
-  this._checkNodes();
-
   // normalize config
-  if (!this.config.start_node) this.config.start_node = Object.keys(this.config.nodes)[0];
-
   if (this.config.link_marker.image === null && this.config.link_marker.html === null) {
     this.config.link_marker.html = PhotoSphereTour.ICONS['link.svg'];
   }
@@ -30,28 +23,28 @@ function PhotoSphereTour(options) {
     this.config.link_marker.width = this.config.link_marker.height = 128;
   }
 
+  this.config.viewer_options.container = this.config.container;
+  this.config.viewer_options.autoload = false;
+
   // references to components
   this.container = (typeof this.config.container == 'string') ? document.getElementById(this.config.container) : this.config.container;
   this.viewer = null;
+  this.nodes = null;
 
   this.prop = {
     current_node: null
   };
 
   // init
-  this.config.viewer_options.container = this.container;
-  this.config.viewer_options.autoload = false;
+  this.container.photoSphereTour = this;
 
-  console.log(this.config.viewer_options);
   this.viewer = new PhotoSphereViewer(this.config.viewer_options);
 
-  this.viewer.on('select-marker', function(marker) {
-    if (marker.pstLink) {
-      this.setNode(marker.pstLink.target_id, marker.pstLink.target_position);
-    }
-  }.bind(this));
+  this._bindEvents();
 
-  this.setNode(this.config.start_node);
+  if (this.config.nodes && this.config.nodes.length > 0) {
+    this.setNodes(this.config.nodes);
+  }
 }
 
 /**
@@ -77,6 +70,9 @@ PhotoSphereTour.DEFAULTS = {
   start_node: null,
   show_nodes_list: true,
   viewer_options: {
+    autoload: false, // always overwritten
     time_anim: false
   }
 };
+
+uEvent.mixin(PhotoSphereTour);
