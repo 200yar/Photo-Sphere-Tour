@@ -6,6 +6,11 @@ module.exports = function(grunt) {
 
   grunt.util.linefeed = '\n';
 
+  var PSVDir = grunt.option('psv');
+  if (PSVDir === true) {
+    PSVDir = '../Photo-Sphere-Viewer';
+  }
+
   // some classes have to be executed before other
   var files_in_order = grunt.file.expand([
     'src/js/PhotoSphereTour.js',
@@ -15,12 +20,11 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    banner:
-      '/*!\n' +
-      ' * Photo Sphere Tour <%= pkg.version %>\n' +
-      ' * Copyright (c) 2016-<%= grunt.template.today("yyyy") %> Damien "Mistic" Sorel\n' +
-      ' * Licensed under MIT (http://opensource.org/licenses/MIT)\n' +
-      ' */',
+    banner: '/*!\n' +
+    ' * Photo Sphere Tour <%= pkg.version %>\n' +
+    ' * Copyright (c) 2016-<%= grunt.template.today("yyyy") %> Damien "Mistic" Sorel\n' +
+    ' * Licensed under MIT (http://opensource.org/licenses/MIT)\n' +
+    ' */',
 
     concat: {
       /**
@@ -198,6 +202,13 @@ module.exports = function(grunt) {
         options: {
           livereload: true
         }
+      },
+      psv: {
+        files: [PSVDir + '/src/**'],
+        tasks: [PSVDir ? 'build-psv' : 'noop'],
+        options: {
+          livereload: true
+        }
       }
     },
 
@@ -208,7 +219,34 @@ module.exports = function(grunt) {
       dev: {
         path: 'http://localhost:<%= connect.dev.options.port%>/example/index.htm'
       }
+    },
+
+    /**
+     * Build Photo-Sphere-Viewer
+     */
+    run_grunt: {
+      psv: {
+        src: [PSVDir + '/Gruntfile.js']
+      }
+    },
+
+    /**
+     * Copy Photo-Sphere-Viewer
+     */
+    copy: {
+      psv: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: [PSVDir + '/dist/*'],
+          dest: 'bower_components/Photo-Sphere-Viewer/dist'
+        }]
+      }
     }
+  });
+
+  grunt.registerTask('noop', function() {
+
   });
 
   /**
@@ -221,6 +259,14 @@ module.exports = function(grunt) {
     'sass',
     'cssmin',
     'concat:css'
+  ]);
+
+  /**
+   * Build Photo-Sphere-Viewer
+   */
+  grunt.registerTask('build-psv', [
+    'run_grunt:psv',
+    'copy:psv'
   ]);
 
   /**
@@ -238,8 +284,11 @@ module.exports = function(grunt) {
    */
   grunt.registerTask('serve', [
     'default',
+    PSVDir ? 'build-psv' : 'noop',
     'open',
     'connect',
-    'watch'
+    'watch:src',
+    'watch:example',
+    PSVDir ? 'watch:psv' : 'noop'
   ]);
 };
